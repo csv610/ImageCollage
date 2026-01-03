@@ -61,6 +61,12 @@ class LayoutCalculator:
                 # Calculate width if image is scaled to fixed_row_height
                 scaled_width = int(fixed_row_height * aspect_ratio)
 
+                # Check if remaining width is enough for this image (at least 80% of its scaled width)
+                remaining_width = config.canvas_width - total_width
+                if row_images and remaining_width < 0.8 * scaled_width:
+                    # Not enough remaining space to fit without aggressive squishing
+                    break
+
                 # Check if it fits in the row
                 needed_width = scaled_width + (len(row_images) * config.gap)
 
@@ -71,14 +77,6 @@ class LayoutCalculator:
                 row_images.append((img_w, img_h))
                 row_image_indices.append(image_idx)
                 total_width += scaled_width
-
-                # Check if remaining width is less than 80% of current image width
-                remaining_width = config.canvas_width - total_width
-                if row_images and remaining_width < 0.8 * scaled_width:
-                    # Less than 80% of image width left, move next image to next row
-                    image_idx += 1
-                    break
-
                 image_idx += 1
 
             # If no images fit, force at least one
@@ -207,6 +205,12 @@ class LayoutCalculator:
                 # Calculate height if image is scaled to fixed_col_width
                 scaled_height = int(fixed_col_width / aspect_ratio)
 
+                # Check if remaining height is enough for this image (at least 80% of its scaled height)
+                remaining_height = config.canvas_height - total_height
+                if col_images and remaining_height < 0.8 * scaled_height:
+                    # Not enough remaining space to fit without aggressive squishing
+                    break
+
                 # Check if it fits in the column
                 needed_height = scaled_height + (len(col_images) * config.gap)
 
@@ -217,14 +221,6 @@ class LayoutCalculator:
                 col_images.append((img_w, img_h))
                 col_image_indices.append(image_idx)
                 total_height += scaled_height
-
-                # Check if remaining height is less than 80% of current image height
-                remaining_height = config.canvas_height - total_height
-                if col_images and remaining_height < 0.8 * scaled_height:
-                    # Less than 80% of image height left, move next image to next column
-                    image_idx += 1
-                    break
-
                 image_idx += 1
 
             # If no images fit, force at least one

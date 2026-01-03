@@ -79,16 +79,18 @@ class LayoutCalculator:
                 total_width += scaled_width
                 image_idx += 1
 
-            # If no images fit, move to next page instead of forcing
+            # If no images fit
             if not row_images:
-                if current_page_placements:
-                    # Complete current page and start new one
-                    pages.append(current_page_placements)
-                    current_page_placements = []
-                    current_row_y = 0
-                    current_row_idx = 0
+                # Check if we're in the last row of the page
+                if current_row_idx >= config.num_splits - 1:
+                    # Last row - move to next page
+                    if current_page_placements:
+                        pages.append(current_page_placements)
+                        current_page_placements = []
+                        current_row_y = 0
+                        current_row_idx = 0
 
-                # Add image to new page
+                # Add image to current or new page
                 row_images.append(image_dimensions[image_idx])
                 row_image_indices.append(image_idx)
                 image_idx += 1
@@ -231,16 +233,18 @@ class LayoutCalculator:
                 total_height += scaled_height
                 image_idx += 1
 
-            # If no images fit, move to next page instead of forcing
+            # If no images fit
             if not col_images:
-                if current_page_placements:
-                    # Complete current page and start new one
-                    pages.append(current_page_placements)
-                    current_page_placements = []
-                    current_col_x = 0
-                    current_col_idx = 0
+                # Check if we're in the last column of the page
+                if current_col_idx >= config.num_splits - 1:
+                    # Last column - move to next page
+                    if current_page_placements:
+                        pages.append(current_page_placements)
+                        current_page_placements = []
+                        current_col_x = 0
+                        current_col_idx = 0
 
-                # Add image to new page
+                # Add image to current or new page
                 col_images.append(image_dimensions[image_idx])
                 col_image_indices.append(image_idx)
                 image_idx += 1

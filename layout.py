@@ -81,19 +81,21 @@ class LayoutCalculator:
 
             # If no images fit
             if not row_images:
-                # Check if we're in the last row of the page
-                if current_row_idx >= config.num_splits - 1:
-                    # Last row - move to next page
-                    if current_page_placements:
-                        pages.append(current_page_placements)
-                        current_page_placements = []
-                        current_row_y = 0
-                        current_row_idx = 0
+                # Ensure we have a valid image to add
+                if image_idx < len(image_dimensions):
+                    # Check if we're in the last row of the page
+                    if current_row_idx >= config.num_splits - 1:
+                        # Last row - move to next page
+                        if current_page_placements:
+                            pages.append(current_page_placements)
+                            current_page_placements = []
+                            current_row_y = 0
+                            current_row_idx = 0
 
-                # Add image to current or new page
-                row_images.append(image_dimensions[image_idx])
-                row_image_indices.append(image_idx)
-                image_idx += 1
+                    # Add image to current or new page (strict order maintained)
+                    row_images.append(image_dimensions[image_idx])
+                    row_image_indices.append(image_idx)
+                    image_idx += 1
 
             # Place images in this row
             # Scale all images to fixed height, then adjust widths to fill canvas width
@@ -235,19 +237,21 @@ class LayoutCalculator:
 
             # If no images fit
             if not col_images:
-                # Check if we're in the last column of the page
-                if current_col_idx >= config.num_splits - 1:
-                    # Last column - move to next page
-                    if current_page_placements:
-                        pages.append(current_page_placements)
-                        current_page_placements = []
-                        current_col_x = 0
-                        current_col_idx = 0
+                # Ensure we have a valid image to add
+                if image_idx < len(image_dimensions):
+                    # Check if we're in the last column of the page
+                    if current_col_idx >= config.num_splits - 1:
+                        # Last column - move to next page
+                        if current_page_placements:
+                            pages.append(current_page_placements)
+                            current_page_placements = []
+                            current_col_x = 0
+                            current_col_idx = 0
 
-                # Add image to current or new page
-                col_images.append(image_dimensions[image_idx])
-                col_image_indices.append(image_idx)
-                image_idx += 1
+                    # Add image to current or new page (strict order maintained)
+                    col_images.append(image_dimensions[image_idx])
+                    col_image_indices.append(image_idx)
+                    image_idx += 1
 
             # Place images in this column
             col_placements = LayoutCalculator._place_col_vertical(

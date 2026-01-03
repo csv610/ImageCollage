@@ -100,8 +100,19 @@ def load_images_or_video(input_path: Path, config: GridConfig) -> Tuple[Union[Li
         total_frames, width, height, fps = VideoProcessor.get_video_info(input_path)
         print(f"Video contains {total_frames} frames")
 
-        # Extract all frames from video
-        frames = VideoProcessor.extract_frames(input_path, total_frames)
+        # Extract first frame to determine dimensions
+        first_frame = VideoProcessor.get_first_frame(input_path)
+        first_frame_dims = (first_frame.size[0], first_frame.size[1])
+
+        # Calculate how many frames we need
+        num_frames_needed = LayoutCalculator.calculate_required_images(config, first_frame_dims)
+
+        # Limit to available frames
+        num_frames_to_extract = min(num_frames_needed, total_frames)
+        print(f"Extracting {num_frames_to_extract} frames (out of {total_frames} available)")
+
+        # Extract only the needed frames from video
+        frames = VideoProcessor.extract_frames(input_path, num_frames_to_extract)
         dimensions = [(frame.size[0], frame.size[1]) for frame in frames]
 
         return frames, dimensions

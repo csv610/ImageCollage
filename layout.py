@@ -71,6 +71,14 @@ class LayoutCalculator:
                 row_images.append((img_w, img_h))
                 row_image_indices.append(image_idx)
                 total_width += scaled_width
+
+                # Check if remaining width is less than 80% of canvas width
+                remaining_width = config.canvas_width - total_width
+                if row_images and remaining_width < 0.2 * config.canvas_width:
+                    # Less than 80% width left, move next image to next row
+                    image_idx += 1
+                    break
+
                 image_idx += 1
 
             # If no images fit, force at least one
@@ -209,6 +217,14 @@ class LayoutCalculator:
                 col_images.append((img_w, img_h))
                 col_image_indices.append(image_idx)
                 total_height += scaled_height
+
+                # Check if remaining height is less than 80% of canvas height
+                remaining_height = config.canvas_height - total_height
+                if col_images and remaining_height < 0.2 * config.canvas_height:
+                    # Less than 80% height left, move next image to next column
+                    image_idx += 1
+                    break
+
                 image_idx += 1
 
             # If no images fit, force at least one

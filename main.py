@@ -198,6 +198,7 @@ def generate_pages(
 def write_layout_file(output_dir: Path, layout_info: List[Tuple[int, List[Tuple[int, str]]]]) -> None:
     """
     Write image layout information to image_layout.txt file.
+    Includes image indices to verify strict ordering.
 
     Args:
         output_dir: Directory to save the layout file
@@ -207,7 +208,9 @@ def write_layout_file(output_dir: Path, layout_info: List[Tuple[int, List[Tuple[
 
     with open(layout_file, "w") as f:
         for page_num, page_images in layout_info:
-            f.write(f"page_{page_num:03d}.jpg: {', '.join(name for _, name in page_images)}\n")
+            # Write page with image indices and names to verify strict ordering
+            images_info = [f"[{idx}] {name}" for idx, name in page_images]
+            f.write(f"page_{page_num:03d}.jpg: {', '.join(images_info)}\n")
 
     print(f"Layout information written to: {layout_file}")
 
